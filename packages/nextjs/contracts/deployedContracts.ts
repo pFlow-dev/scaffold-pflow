@@ -4,6 +4,605 @@
  */
 import { GenericContractsDeclaration } from "~~/utils/scaffold-eth/contract";
 
-const deployedContracts = {} as const;
+const deployedContracts = {
+  31337: {
+    TicTacToe: {
+      address: "0x5FbDB2315678afecb367f032d93F642f64180aa3",
+      abi: [
+        {
+          inputs: [
+            {
+              internalType: "address",
+              name: "p0",
+              type: "address",
+            },
+            {
+              internalType: "address",
+              name: "p1",
+              type: "address",
+            },
+          ],
+          stateMutability: "nonpayable",
+          type: "constructor",
+        },
+        {
+          inputs: [],
+          name: "O00",
+          outputs: [],
+          stateMutability: "nonpayable",
+          type: "function",
+        },
+        {
+          inputs: [],
+          name: "O01",
+          outputs: [],
+          stateMutability: "nonpayable",
+          type: "function",
+        },
+        {
+          inputs: [],
+          name: "O02",
+          outputs: [],
+          stateMutability: "nonpayable",
+          type: "function",
+        },
+        {
+          inputs: [],
+          name: "O10",
+          outputs: [],
+          stateMutability: "nonpayable",
+          type: "function",
+        },
+        {
+          inputs: [],
+          name: "O11",
+          outputs: [],
+          stateMutability: "nonpayable",
+          type: "function",
+        },
+        {
+          inputs: [],
+          name: "O12",
+          outputs: [],
+          stateMutability: "nonpayable",
+          type: "function",
+        },
+        {
+          inputs: [],
+          name: "O20",
+          outputs: [],
+          stateMutability: "nonpayable",
+          type: "function",
+        },
+        {
+          inputs: [],
+          name: "O21",
+          outputs: [],
+          stateMutability: "nonpayable",
+          type: "function",
+        },
+        {
+          inputs: [],
+          name: "O22",
+          outputs: [],
+          stateMutability: "nonpayable",
+          type: "function",
+        },
+        {
+          inputs: [],
+          name: "PlayerO",
+          outputs: [
+            {
+              internalType: "address",
+              name: "",
+              type: "address",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [],
+          name: "PlayerX",
+          outputs: [
+            {
+              internalType: "address",
+              name: "",
+              type: "address",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [],
+          name: "X00",
+          outputs: [],
+          stateMutability: "nonpayable",
+          type: "function",
+        },
+        {
+          inputs: [],
+          name: "X01",
+          outputs: [],
+          stateMutability: "nonpayable",
+          type: "function",
+        },
+        {
+          inputs: [],
+          name: "X02",
+          outputs: [],
+          stateMutability: "nonpayable",
+          type: "function",
+        },
+        {
+          inputs: [],
+          name: "X10",
+          outputs: [],
+          stateMutability: "nonpayable",
+          type: "function",
+        },
+        {
+          inputs: [],
+          name: "X11",
+          outputs: [],
+          stateMutability: "nonpayable",
+          type: "function",
+        },
+        {
+          inputs: [],
+          name: "X12",
+          outputs: [],
+          stateMutability: "nonpayable",
+          type: "function",
+        },
+        {
+          inputs: [],
+          name: "X20",
+          outputs: [],
+          stateMutability: "nonpayable",
+          type: "function",
+        },
+        {
+          inputs: [],
+          name: "X21",
+          outputs: [],
+          stateMutability: "nonpayable",
+          type: "function",
+        },
+        {
+          inputs: [],
+          name: "X22",
+          outputs: [],
+          stateMutability: "nonpayable",
+          type: "function",
+        },
+        {
+          inputs: [],
+          name: "declaration",
+          outputs: [
+            {
+              components: [
+                {
+                  components: [
+                    {
+                      internalType: "string",
+                      name: "label",
+                      type: "string",
+                    },
+                    {
+                      internalType: "uint8",
+                      name: "x",
+                      type: "uint8",
+                    },
+                    {
+                      internalType: "uint8",
+                      name: "y",
+                      type: "uint8",
+                    },
+                    {
+                      internalType: "uint256",
+                      name: "initial",
+                      type: "uint256",
+                    },
+                    {
+                      internalType: "uint256",
+                      name: "capacity",
+                      type: "uint256",
+                    },
+                  ],
+                  internalType: "struct Declaration.place[]",
+                  name: "places",
+                  type: "tuple[]",
+                },
+                {
+                  components: [
+                    {
+                      internalType: "string",
+                      name: "label",
+                      type: "string",
+                    },
+                    {
+                      internalType: "uint8",
+                      name: "x",
+                      type: "uint8",
+                    },
+                    {
+                      internalType: "uint8",
+                      name: "y",
+                      type: "uint8",
+                    },
+                    {
+                      internalType: "uint8",
+                      name: "role",
+                      type: "uint8",
+                    },
+                  ],
+                  internalType: "struct Declaration.transition[]",
+                  name: "transitions",
+                  type: "tuple[]",
+                },
+                {
+                  components: [
+                    {
+                      internalType: "string",
+                      name: "source",
+                      type: "string",
+                    },
+                    {
+                      internalType: "string",
+                      name: "target",
+                      type: "string",
+                    },
+                    {
+                      internalType: "uint256",
+                      name: "weight",
+                      type: "uint256",
+                    },
+                    {
+                      internalType: "bool",
+                      name: "consume",
+                      type: "bool",
+                    },
+                    {
+                      internalType: "bool",
+                      name: "produce",
+                      type: "bool",
+                    },
+                    {
+                      internalType: "bool",
+                      name: "inhibit",
+                      type: "bool",
+                    },
+                    {
+                      internalType: "bool",
+                      name: "read",
+                      type: "bool",
+                    },
+                  ],
+                  internalType: "struct Declaration.arc[]",
+                  name: "arcs",
+                  type: "tuple[]",
+                },
+              ],
+              internalType: "struct Declaration.PetriNet",
+              name: "",
+              type: "tuple",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "uint8",
+              name: "action",
+              type: "uint8",
+            },
+            {
+              internalType: "uint256",
+              name: "scalar",
+              type: "uint256",
+            },
+          ],
+          name: "dryRun",
+          outputs: [],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [],
+          name: "getRole",
+          outputs: [
+            {
+              internalType: "enum TicTacToeModel.Roles",
+              name: "",
+              type: "uint8",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [],
+          name: "model",
+          outputs: [
+            {
+              components: [
+                {
+                  components: [
+                    {
+                      internalType: "string",
+                      name: "label",
+                      type: "string",
+                    },
+                    {
+                      internalType: "uint8",
+                      name: "offset",
+                      type: "uint8",
+                    },
+                    {
+                      components: [
+                        {
+                          internalType: "uint8",
+                          name: "x",
+                          type: "uint8",
+                        },
+                        {
+                          internalType: "uint8",
+                          name: "y",
+                          type: "uint8",
+                        },
+                      ],
+                      internalType: "struct Model.Position",
+                      name: "position",
+                      type: "tuple",
+                    },
+                    {
+                      internalType: "uint256",
+                      name: "initial",
+                      type: "uint256",
+                    },
+                    {
+                      internalType: "uint256",
+                      name: "capacity",
+                      type: "uint256",
+                    },
+                  ],
+                  internalType: "struct Model.Place[]",
+                  name: "places",
+                  type: "tuple[]",
+                },
+                {
+                  components: [
+                    {
+                      internalType: "string",
+                      name: "label",
+                      type: "string",
+                    },
+                    {
+                      internalType: "uint8",
+                      name: "offset",
+                      type: "uint8",
+                    },
+                    {
+                      components: [
+                        {
+                          internalType: "uint8",
+                          name: "x",
+                          type: "uint8",
+                        },
+                        {
+                          internalType: "uint8",
+                          name: "y",
+                          type: "uint8",
+                        },
+                      ],
+                      internalType: "struct Model.Position",
+                      name: "position",
+                      type: "tuple",
+                    },
+                    {
+                      internalType: "uint8",
+                      name: "role",
+                      type: "uint8",
+                    },
+                    {
+                      internalType: "int256[]",
+                      name: "delta",
+                      type: "int256[]",
+                    },
+                    {
+                      internalType: "int256[]",
+                      name: "guard",
+                      type: "int256[]",
+                    },
+                  ],
+                  internalType: "struct Model.Transition[]",
+                  name: "transitions",
+                  type: "tuple[]",
+                },
+                {
+                  components: [
+                    {
+                      internalType: "uint256",
+                      name: "weight",
+                      type: "uint256",
+                    },
+                    {
+                      components: [
+                        {
+                          internalType: "string",
+                          name: "label",
+                          type: "string",
+                        },
+                        {
+                          internalType: "uint8",
+                          name: "offset",
+                          type: "uint8",
+                        },
+                        {
+                          internalType: "enum Model.NodeKind",
+                          name: "kind",
+                          type: "uint8",
+                        },
+                      ],
+                      internalType: "struct Model.Node",
+                      name: "source",
+                      type: "tuple",
+                    },
+                    {
+                      components: [
+                        {
+                          internalType: "string",
+                          name: "label",
+                          type: "string",
+                        },
+                        {
+                          internalType: "uint8",
+                          name: "offset",
+                          type: "uint8",
+                        },
+                        {
+                          internalType: "enum Model.NodeKind",
+                          name: "kind",
+                          type: "uint8",
+                        },
+                      ],
+                      internalType: "struct Model.Node",
+                      name: "target",
+                      type: "tuple",
+                    },
+                    {
+                      internalType: "bool",
+                      name: "inhibitor",
+                      type: "bool",
+                    },
+                    {
+                      internalType: "bool",
+                      name: "read",
+                      type: "bool",
+                    },
+                  ],
+                  internalType: "struct Model.Arc[]",
+                  name: "arcs",
+                  type: "tuple[]",
+                },
+              ],
+              internalType: "struct Model.PetriNet",
+              name: "",
+              type: "tuple",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [],
+          name: "owner",
+          outputs: [
+            {
+              internalType: "address",
+              name: "",
+              type: "address",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [],
+          name: "resetGame",
+          outputs: [],
+          stateMutability: "nonpayable",
+          type: "function",
+        },
+        {
+          inputs: [],
+          name: "sequence",
+          outputs: [
+            {
+              internalType: "int256",
+              name: "",
+              type: "int256",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "uint8",
+              name: "action",
+              type: "uint8",
+            },
+            {
+              internalType: "uint256",
+              name: "scalar",
+              type: "uint256",
+            },
+          ],
+          name: "signal",
+          outputs: [],
+          stateMutability: "nonpayable",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "uint8[]",
+              name: "actions",
+              type: "uint8[]",
+            },
+            {
+              internalType: "uint256[]",
+              name: "scalars",
+              type: "uint256[]",
+            },
+          ],
+          name: "signalMany",
+          outputs: [],
+          stateMutability: "nonpayable",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "uint256",
+              name: "",
+              type: "uint256",
+            },
+          ],
+          name: "state",
+          outputs: [
+            {
+              internalType: "int256",
+              name: "",
+              type: "int256",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [],
+          name: "url",
+          outputs: [
+            {
+              internalType: "string",
+              name: "",
+              type: "string",
+            },
+          ],
+          stateMutability: "pure",
+          type: "function",
+        },
+      ],
+      inheritedFunctions: {},
+    },
+  },
+} as const;
 
 export default deployedContracts satisfies GenericContractsDeclaration;
