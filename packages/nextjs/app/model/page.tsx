@@ -2,14 +2,14 @@
 
 import React from "react";
 import "./App.css";
-import DesignToolbar from "./designer/DesignToolbar";
-import Designer from "./designer/Designer";
-import Editor from "./editor/Editor";
-import { getModel } from "./pflow";
 import { Paper } from "@mui/material";
 import { Abi } from "abitype";
 import { useContractRead } from "wagmi";
-import { DeclarationResult, contractDeclarationToJson } from "~~/app/p/pflow/contract";
+import DesignToolbar from "~~/components/designer/DesignToolbar";
+import Designer from "~~/components/designer/Designer";
+import Editor from "~~/components/editor/Editor";
+import { MetaModel } from "~~/pflow";
+import { DeclarationResult, contractDeclarationToJson } from "~~/pflow/contract";
 import { GenericContract } from "~~/utils/scaffold-eth/contract";
 import { getAllContracts } from "~~/utils/scaffold-eth/contractsData";
 
@@ -20,8 +20,9 @@ function declarationContracts(): GenericContract[] {
   });
 }
 
+const metaModel = new MetaModel();
+
 const PflowEditorPage: React.FC = () => {
-  const metaModel = getModel();
   const [modelVersion, modelUpdated] = React.useState(0);
   metaModel.onUpdate(() => modelUpdated(modelVersion ? 0 : 1));
 
@@ -35,9 +36,11 @@ const PflowEditorPage: React.FC = () => {
     args: [],
   });
 
-  if (contract) {
+  if (result && contract) {
     metaModel.setImportedContract(contract?.address);
-    metaModel.loadJson(contractDeclarationToJson(result.data as DeclarationResult));
+    if (result.data) {
+      metaModel.loadJson(contractDeclarationToJson(result.data as DeclarationResult));
+    }
   }
 
   return (

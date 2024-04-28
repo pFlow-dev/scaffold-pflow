@@ -26,7 +26,7 @@ export const menuLinks: HeaderMenuLink[] = [
   },
   {
     label: "Analyze Models",
-    href: "/p",
+    href: "/model",
     icon: <PlayCircleIcon className="h-4 w-4" />,
   },
 ];

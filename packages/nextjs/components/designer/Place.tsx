@@ -1,5 +1,5 @@
 import React from "react";
-import { MetaModel } from "../pflow";
+import { MetaModel } from "../../pflow";
 
 interface PlaceProps {
   id: string;

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { MetaModel } from "../pflow";
+import { MetaModel } from "../../pflow";
 import Model from "./Model";
 
 // import { Address } from "~~/components/scaffold-eth";

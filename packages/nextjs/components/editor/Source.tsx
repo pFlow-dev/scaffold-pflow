@@ -1,7 +1,7 @@
 import React from "react";
-import { MetaModel } from "../pflow";
-import * as mm from "../protocol";
 import CodeEditor from "@uiw/react-textarea-code-editor";
+import { MetaModel } from "~~/pflow";
+import * as mm from "~~/pflow";
 
 interface SourceViewProps {
   metaModel: MetaModel;
@@ -46,7 +46,7 @@ export default function Source(props: SourceViewProps) {
           fontFamily: "ui-monospace,SFMono-Regular,SF Mono,Consolas,Liberation Mono,Menlo,monospace",
         }}
         onFocus={() => metaModel.beginEdit()}
-        onBlur={async evt => {
+        onBlur={async (evt: { target: { value: string } }) => {
           await update(evt.target.value);
           metaModel.endEdit();
         }}

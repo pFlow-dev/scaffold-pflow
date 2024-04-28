@@ -1,8 +1,9 @@
 import React from "react";
-import * as mm from "../protocol";
+import { MetaObject, Model, ModelDeclaration, ModelType, Place, Transition, Vector, newModel } from "./model";
+import { Stream } from "./stream";
 import { Action } from "./types";
 
-export type MaybeNode = mm.Place | mm.Transition | null;
+export type MaybeNode = Place | Transition | null;
 export const keyToAction: Record<string, Action> = Object.freeze({
   "1": "select",
   "2": "snapshot",
@@ -28,13 +29,9 @@ interface Event {
   multiple: number;
 }
 
-export function getModel(): MetaModel {
-  return metaModelSingleton;
-}
-
-function newStream(m: mm.Model): mm.Stream<Event> {
-  const stream = new mm.Stream<Event>({ model: m });
-  stream.dispatcher.onFail((s, evt) => {
+function newStream(m: Model): Stream<Event> {
+  const stream = new Stream<Event>({ model: m });
+  stream.dispatcher.onFail((s: any, evt: any) => {
     // this app doesn't let the user make invalid transitions
     // so this should never happen
     console.error({ s, evt }, "onFail");
@@ -47,9 +44,9 @@ const noOp = () => {
   return "noop";
 };
 
-const initialModel = mm.newModel({
+const initialModel = newModel({
   declaration: noOp,
-  type: mm.ModelType.petriNet,
+  type: ModelType.petriNet,
 });
 
 interface StreamLog {
@@ -59,18 +56,18 @@ interface StreamLog {
   href: string;
 }
 
-const defaultHeight = 620;
+const EDITOR_HEIGHT = 625;
 
 export class MetaModel {
   ethAccount = "null";
   importedContract = "null";
-  m: mm.Model = initialModel;
+  m: Model = initialModel;
   urlLoaded: Promise<void> = Promise.resolve();
-  height = defaultHeight;
-  selectedObject: mm.MetaObject | null = null;
+  height = EDITOR_HEIGHT;
+  selectedObject: MetaObject | null = null;
   selectedId: string | null = null;
   mode: Action = "select";
-  stream: mm.Stream<Event> = newStream(initialModel);
+  stream: Stream<Event> = newStream(initialModel);
   zippedJson = "";
   revision = 0;
   commits: Map<number, string> = new Map<number, string>();
@@ -130,12 +127,12 @@ export class MetaModel {
 
   async loadJson(json: string): Promise<boolean> {
     try {
-      const data = JSON.parse(json) as mm.ModelDeclaration;
+      const data = JSON.parse(json) as ModelDeclaration;
       if (data.version !== "v0") {
         console.warn("model version mismatch, expected: v0 got: " + data.version);
         data.version = "v0";
       }
-      this.m = mm.newModel({
+      this.m = newModel({
         declaration: data,
         type: data.modelType,
       });
@@ -152,9 +149,9 @@ export class MetaModel {
   }
 
   clearAll(): Promise<void> {
-    this.m = mm.newModel({
+    this.m = newModel({
       declaration: noOp,
-      type: mm.ModelType.petriNet,
+      type: ModelType.petriNet,
     });
     this.restartStream(false);
     return this.commit({ action: "clear all" });
@@ -165,7 +162,7 @@ export class MetaModel {
     this.m.def.places.forEach(p => {
       const { initial, position, offset } = p;
       let capacity = p.capacity;
-      if ([mm.ModelType.elementary, mm.ModelType.workflow].includes(this.m.def.type)) {
+      if ([ModelType.elementary, ModelType.workflow].includes(this.m.def.type)) {
         capacity = 0; // use default capacity for elementary and workflow
       }
       let place = `{ "offset": ${offset}, "x": ${position.x}, "y": ${position.y} }`;
@@ -402,8 +399,8 @@ export class MetaModel {
     return Promise.resolve();
   }
 
-  allSelectableObjects(): mm.MetaObject[] {
-    const objects: mm.MetaObject[] = [];
+  allSelectableObjects(): MetaObject[] {
+    const objects: MetaObject[] = [];
     this.m.def.places.forEach(p => objects.push(p));
     this.m.def.transitions.forEach(t => objects.push(t));
     return objects;
@@ -489,9 +486,17 @@ export class MetaModel {
     return node;
   }
 
+  evtToCoords(evt: React.MouseEvent): { x: number; y: number } {
+    return {
+      x: evt.pageX,
+      y: evt.pageY,
+    };
+  }
+
   editorClick(evt: React.MouseEvent): Promise<void> {
     let updated = false;
-    const nearby = this.getNearbyNode(evt.clientX, evt.clientY);
+    const coords = this.evtToCoords(evt);
+    const nearby = this.getNearbyNode(coords.x, coords.y);
     switch (this.mode) {
       case "select":
         if (!nearby) {
@@ -501,12 +506,12 @@ export class MetaModel {
         break;
       case "place":
         if (!nearby) {
-          updated = this.m.addPlace({ x: evt.clientX, y: evt.clientY });
+          updated = this.m.addPlace({ x: coords.x, y: coords.y });
         }
         break;
       case "transition":
         if (!nearby) {
-          updated = this.m.addTransition({ x: evt.clientX, y: evt.clientY });
+          updated = this.m.addTransition({ x: coords.x, y: coords.y });
         }
         break;
     }
@@ -524,8 +529,8 @@ export class MetaModel {
   }
 
   resizeSvg(): Promise<void> {
-    if (this.height !== defaultHeight) {
-      this.height = defaultHeight;
+    if (this.height !== EDITOR_HEIGHT) {
+      this.height = EDITOR_HEIGHT;
     } else {
       // @ts-ignore
       this.height = window.innerHeight - 55;
@@ -601,7 +606,7 @@ export class MetaModel {
     this.selectedObject = null;
   }
 
-  getState(): mm.Vector {
+  getState(): Vector {
     let s = this.m.initialVector();
     if (this.isRunning()) {
       s = this.stream.state || this.m.initialVector();
@@ -613,7 +618,7 @@ export class MetaModel {
     const state = this.getState();
     const n = this.getNode(id);
     if (n.metaType === "place") {
-      const p = n as mm.Place;
+      const p = n as Place;
       return state[p.offset];
     }
     return 0;
@@ -626,8 +631,8 @@ export class MetaModel {
     return this.selectedId === id;
   }
 
-  getObj(id: string): mm.MetaObject {
-    let obj: mm.MetaObject | undefined = this.m.def.transitions.get(id);
+  getObj(id: string): MetaObject {
+    let obj: MetaObject | undefined = this.m.def.transitions.get(id);
     if (obj) {
       return obj;
     }
@@ -638,7 +643,7 @@ export class MetaModel {
     throw new Error("object not found: " + id);
   }
 
-  getNode(id: string): mm.Place | mm.Transition {
+  getNode(id: string): Place | Transition {
     const obj = this.getObj(id);
     if (!obj) {
       throw new Error("Failed to select node" + id);
@@ -694,14 +699,14 @@ export class MetaModel {
     }
 
     if (source.metaType === "place" && target.metaType === "transition") {
-      const place = source as mm.Place;
-      const transition = target as mm.Transition;
+      const place = source as Place;
+      const transition = target as Transition;
       transition.delta[place.offset] = 0;
       target.guards.delete(place.label);
     }
     if (source.metaType === "transition" && target.metaType === "place") {
-      const place = target as mm.Place;
-      const transition = source as mm.Transition;
+      const place = target as Place;
+      const transition = source as Transition;
       transition.delta[place.offset] = 0;
       source.guards.delete(place.label);
     }
@@ -721,8 +726,8 @@ export class MetaModel {
     }
     if (this.mode === "arc" && this.selectedObject) {
       if (this.selectedObject.metaType === "transition" && obj.metaType === "place") {
-        const place = obj as mm.Place;
-        const transition = this.selectedObject as mm.Transition;
+        const place = obj as Place;
+        const transition = this.selectedObject as Transition;
         const weight = 1;
         transition.delta[place.offset] = weight;
         // REVIEW: do all the steps just as in reindex() call
@@ -742,11 +747,11 @@ export class MetaModel {
     if (this.mode === "token") {
       const place = this.getPlace(id);
       switch (this.m.def.type) {
-        case mm.ModelType.petriNet:
+        case ModelType.petriNet:
           place.initial = place.initial + 1;
           return this.commit({ action: `add token ${place.label}` });
-        case mm.ModelType.workflow:
-        case mm.ModelType.elementary:
+        case ModelType.workflow:
+        case ModelType.elementary:
           if (place.initial === 0) {
             place.initial = 1;
           } else {
@@ -765,14 +770,14 @@ export class MetaModel {
     if (this.mode === "token") {
       const place = this.getPlace(id);
       switch (this.m.def.type) {
-        case mm.ModelType.petriNet:
+        case ModelType.petriNet:
           if (place.initial > 0) {
             place.initial = place.initial - 1;
             return this.commit({ action: `remove token ${place.label}` });
           }
           break;
-        case mm.ModelType.workflow:
-        case mm.ModelType.elementary:
+        case ModelType.workflow:
+        case ModelType.elementary:
           if (place.initial === 0) {
             place.initial = 1;
           } else {
@@ -785,7 +790,7 @@ export class MetaModel {
     return Promise.resolve();
   }
 
-  getPlace(id: string): mm.Place {
+  getPlace(id: string): Place {
     const obj = this.getObj(id);
     if (obj.metaType === "place") {
       return obj;
@@ -825,7 +830,7 @@ export class MetaModel {
     }
     if (this.mode === "arc" && this.selectedObject) {
       if (this.selectedObject.metaType === "place") {
-        const place = this.selectedObject as mm.Place;
+        const place = this.selectedObject as Place;
         const transition = this.getTransition(id);
         transition.delta[place.offset] = -1;
         this.m.def.arcs.push({
@@ -849,7 +854,7 @@ export class MetaModel {
     return Promise.resolve();
   }
 
-  getTransition(id: string): mm.Transition {
+  getTransition(id: string): Transition {
     const obj = this.getObj(id);
     if (obj.metaType === "transition") {
       return obj;
@@ -857,7 +862,7 @@ export class MetaModel {
     throw new Error("not a transition: " + id);
   }
 
-  getCurrentObj(): mm.MetaObject | null {
+  getCurrentObj(): MetaObject | null {
     return this.selectedObject;
   }
 
@@ -968,18 +973,18 @@ export class MetaModel {
     });
   }
 
-  async setModelType(modelType: mm.ModelType): Promise<void> {
+  async setModelType(modelType: ModelType): Promise<void> {
     const old = this.m.def.type;
     if (old === modelType) {
       return;
     }
     this.m.def.type = modelType;
     switch (modelType) {
-      case mm.ModelType.petriNet:
+      case ModelType.petriNet:
         await this.commit({ action: `set model type to ${modelType}` });
         break;
-      case mm.ModelType.elementary:
-      case mm.ModelType.workflow:
+      case ModelType.elementary:
+      case ModelType.workflow:
         this.reLevelNet();
         await this.commit({ action: `set model type to ${modelType}` });
         break;
@@ -988,5 +993,3 @@ export class MetaModel {
     }
   }
 }
-
-const metaModelSingleton = new MetaModel();

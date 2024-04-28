@@ -1,5 +1,5 @@
 import React from "react";
-import { MetaModel } from "../pflow";
+import { MetaModel } from "../../pflow";
 import { FormGroup, Grid, TextField } from "@mui/material";
 
 export default function History(props: { metaModel: MetaModel }) {

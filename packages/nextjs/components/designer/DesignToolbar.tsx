@@ -1,5 +1,5 @@
 import React from "react";
-import { Action, MetaModel } from "../pflow";
+import { Action, MetaModel } from "../../pflow";
 import {
   Adjust,
   ArrowRightAlt,

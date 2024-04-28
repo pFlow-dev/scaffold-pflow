@@ -1,9 +1,9 @@
 import React, { ReactElement } from "react";
-import { MetaModel } from "../pflow";
-import * as mm from "../protocol";
+import * as mm from "../../pflow";
 import Arc from "./Arc";
 import Place from "./Place";
 import Transition from "./Transition";
+import { MetaModel } from "~~/pflow";
 
 interface ModelProps {
   metaModel: MetaModel;

@@ -1,6 +1,6 @@
 import React from "react";
-import { MetaModel } from "../pflow";
-import * as mm from "../protocol";
+import * as mm from "../../pflow";
+import { MetaModel } from "~~/pflow";
 
 interface ArcProps {
   id: string;

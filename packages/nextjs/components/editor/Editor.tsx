@@ -1,5 +1,5 @@
 import React from "react";
-import { MetaModel } from "../pflow";
+import { MetaModel } from "../../pflow";
 import History from "./History";
 import Place from "./Place";
 import Source from "./Source";

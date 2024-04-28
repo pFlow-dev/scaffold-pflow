@@ -1,9 +1,9 @@
 import React from "react";
-import { MetaModel } from "../pflow";
-import * as mm from "../protocol";
 import { Clear, SwapHoriz } from "@mui/icons-material";
 import { MenuItem, Select, TextField } from "@mui/material";
 import Tooltip from "@mui/material/Tooltip";
+import { MetaModel } from "~~/pflow";
+import * as mm from "~~/pflow";
 
 export function Arc(props: { metaModel: MetaModel; arc: mm.Arc }) {
   const source = props.arc.source.place || props.arc.source.transition;

@@ -34,8 +34,8 @@ const Home: NextPage = () => {
           </p>
           <p className="text-center text-lg">
             Review the Petri-net models embedded in the contract using the{" "}
-            <Link href="/p" passHref className="link">
-              Pflow Model Simulator
+            <Link href="/model" passHref className="link">
+              Pflow Model Explorer
             </Link>
           </p>
         </div>
@@ -66,10 +66,9 @@ const Home: NextPage = () => {
               <PlayCircleIcon className="h-8 w-8 fill-secondary" />
               <p>
                 Simulate state-transitions using the{" "}
-                <Link href="/p" passHref className="link">
-                  Pflow Model Simulator
+                <Link href="/model" passHref className="link">
+                  Pflow Model Explorer.
                 </Link>{" "}
-                tab.
               </p>
             </div>
           </div>

@@ -1,65 +1,74 @@
 import React from "react";
-import { MetaModel } from "../pflow";
+import { MetaModel } from "../../pflow";
 import { Arc } from "./Arc";
 import { Clear } from "@mui/icons-material";
 import { TextField } from "@mui/material";
 import Tooltip from "@mui/material/Tooltip";
 
-function valToInt(value: string): number {
-  const val = parseInt(value);
-  if (!!val && val >= 0) {
-    return val;
-  }
-  return 0;
-}
-
-interface TransitionProps {
+interface PlaceProps {
   selectedObj: any;
   metaModel: MetaModel;
 }
 
-export default function Transition(props: TransitionProps) {
-  const { metaModel } = props;
-  const transition = metaModel.getTransition(props.selectedObj.label);
+export default function Place(props: PlaceProps) {
+  const place = props.selectedObj;
+  const metaModel = props.metaModel;
+
   const onFocus = () => metaModel.beginEdit();
   const onBlur = () => metaModel.endEdit();
 
   async function handleChange(evt: React.ChangeEvent<HTMLInputElement>) {
-    // construct a new label and avoid collision with existing objects
+    const attribute = evt.target.id;
+    const value = metaModel.m.newLabel(evt.target.value);
 
-    switch (evt.target.id) {
-      case "role": {
-        transition.role = { label: evt.target.value };
+    switch (attribute) {
+      case "label": {
+        metaModel.m.renamePlace(place.label, value);
         break;
       }
-      case "label": {
-        metaModel.m.renameTransition(transition.label, metaModel.m.newLabel(evt.target.value));
+      case "initial": {
+        const initial = parseInt(value);
+        if (initial >= 0) {
+          place.initial = initial;
+        }
+        break;
+      }
+      case "capacity": {
+        const capacity = parseInt(value);
+        if (capacity >= 0) {
+          place.capacity = capacity;
+        }
         break;
       }
       case "x": {
-        metaModel.getTransition(transition.label).position.x = valToInt(evt.target.value);
+        const x = parseInt(value);
+        if (x >= 0) {
+          place.position.x = x;
+        }
         break;
       }
       case "y": {
-        metaModel.getTransition(transition.label).position.y = valToInt(evt.target.value);
+        const y = parseInt(value);
+        if (y >= 0) {
+          place.position.y = y;
+        }
         break;
       }
       default: {
       }
     }
-    await metaModel.commit({ action: `transition change ${evt.target.id}: ${evt.target.value}` });
-    return true;
+    return props.metaModel.commit({ action: `place change ${attribute}: ${value}` });
   }
 
+  const marginTop = "5px";
+  const width = "9.5em";
+
   const arcs = metaModel.m.def.arcs.map(arc => {
-    if (arc.source.transition !== transition && arc.target.transition !== transition) {
+    if (arc.source.place !== place && arc.target.place !== place) {
       return null;
     }
     return <Arc key={"arc_" + arc.offset} metaModel={metaModel} arc={arc} />;
   });
-
-  const marginTop = "5px";
-  const width = "5em";
 
   return (
     <React.Fragment>
@@ -68,12 +77,12 @@ export default function Transition(props: TransitionProps) {
           sx={{ marginTop, width: "9em" }}
           id="type"
           label="Type"
-          variant="outlined"
           disabled={true}
+          variant="outlined"
           onFocus={onFocus}
           onBlur={onBlur}
           onChange={handleChange}
-          value="Transition"
+          value="Place"
         />
         <TextField
           sx={{ marginTop, width: "19em" }}
@@ -83,46 +92,58 @@ export default function Transition(props: TransitionProps) {
           onFocus={onFocus}
           onBlur={onBlur}
           onChange={handleChange}
-          value={transition.label}
-        />
-        <TextField
-          sx={{ marginTop, width: "19em" }}
-          id="role"
-          label="Role"
-          variant="outlined"
-          onChange={handleChange}
-          onFocus={onFocus}
-          onBlur={onBlur}
-          value={transition.role.label}
+          value={place.label}
         />
         <TextField
           sx={{ marginTop, width }}
+          type="number"
+          id="initial"
+          label="Initial"
+          variant="outlined"
+          onFocus={onFocus}
+          onBlur={onBlur}
+          onChange={handleChange}
+          value={place.initial}
+        />
+        <TextField
+          sx={{ marginTop, width }}
+          type="number"
+          id="capacity"
+          label="Capacity"
+          variant="outlined"
+          onFocus={onFocus}
+          onBlur={onBlur}
+          onChange={handleChange}
+          value={place.capacity}
+        />
+        <TextField
+          sx={{ marginTop, width: "5em" }}
           type="number"
           id="x"
           label="x"
           variant="outlined"
-          onChange={handleChange}
           onFocus={onFocus}
           onBlur={onBlur}
-          value={transition.position.x}
+          onChange={handleChange}
+          value={place.position.x}
         />
         <TextField
-          sx={{ marginTop, width }}
+          sx={{ marginTop, width: "5em" }}
           type="number"
           id="y"
           label="y"
           variant="outlined"
-          onChange={handleChange}
           onFocus={onFocus}
           onBlur={onBlur}
-          value={transition.position.y}
+          onChange={handleChange}
+          value={place.position.y}
         />
         <Tooltip sx={{ marginBottom: "-29px" }} title={"delete"}>
           <Clear
             onClick={async () => {
-              metaModel.m.deleteTransition(transition.label);
+              metaModel.m.deletePlace(place.label);
               metaModel.unsetCurrentObj();
-              await metaModel.commit({ action: `transition delete ${transition.label}` });
+              await metaModel.commit({ action: `place delete ${place.label}` });
             }}
           />
         </Tooltip>
